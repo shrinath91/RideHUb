@@ -18,6 +18,8 @@
 --
 -- Table structure for table `cars`
 --
+create database ridehub;
+use ridehub;
 
 DROP TABLE IF EXISTS `cars`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
