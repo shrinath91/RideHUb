@@ -1,1 +1,1 @@
-# RideHUb
+# RideHub
