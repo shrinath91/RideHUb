@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `ridehub` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `ridehub`;
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
 -- Host: localhost    Database: ridehub
@@ -34,6 +36,15 @@ CREATE TABLE `admin` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `admin`
+--
+
+LOCK TABLES `admin` WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cars`
 --
 
@@ -54,6 +65,15 @@ CREATE TABLE `cars` (
   CONSTRAINT `fk_driver_id` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cars`
+--
+
+LOCK TABLES `cars` WRITE;
+/*!40000 ALTER TABLE `cars` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cars` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `drivers`
@@ -84,6 +104,15 @@ CREATE TABLE `drivers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `drivers`
+--
+
+LOCK TABLES `drivers` WRITE;
+/*!40000 ALTER TABLE `drivers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `drivers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `passengers`
 --
 
@@ -109,6 +138,15 @@ CREATE TABLE `passengers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `passengers`
+--
+
+LOCK TABLES `passengers` WRITE;
+/*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ride_passengers`
 --
 
@@ -124,6 +162,15 @@ CREATE TABLE `ride_passengers` (
   CONSTRAINT `fk_ridePassenger_rideId` FOREIGN KEY (`ride_id`) REFERENCES `rides` (`rideId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ride_passengers`
+--
+
+LOCK TABLES `ride_passengers` WRITE;
+/*!40000 ALTER TABLE `ride_passengers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ride_passengers` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `rides`
@@ -149,6 +196,15 @@ CREATE TABLE `rides` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `rides`
+--
+
+LOCK TABLES `rides` WRITE;
+/*!40000 ALTER TABLE `rides` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rides` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -162,6 +218,15 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -172,4 +237,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-07  9:32:30
+-- Dump completed on 2024-02-07  9:47:43
