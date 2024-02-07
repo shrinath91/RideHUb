@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `ridehub` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `ridehub`;
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
 -- Host: localhost    Database: ridehub
@@ -16,33 +14,6 @@ USE `ridehub`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `admin`
---
-
-DROP TABLE IF EXISTS `admin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `admin` (
-  `admin_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `role` varchar(45) NOT NULL,
-  PRIMARY KEY (`admin_id`),
-  KEY `fk_user_id_idx` (`user_id`),
-  CONSTRAINT `fk_userId` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `admin`
---
-
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `cars`
@@ -62,7 +33,7 @@ CREATE TABLE `cars` (
   PRIMARY KEY (`car_id`),
   UNIQUE KEY `licensePlate_UNIQUE` (`licensePlate`),
   KEY `fk_driver_id_idx` (`driver_id`),
-  CONSTRAINT `fk_driver_id` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`)
+  CONSTRAINT `fk_driver_id` FOREIGN KEY (`driver_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -73,77 +44,6 @@ CREATE TABLE `cars` (
 LOCK TABLES `cars` WRITE;
 /*!40000 ALTER TABLE `cars` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cars` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `drivers`
---
-
-DROP TABLE IF EXISTS `drivers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `drivers` (
-  `driver_id` int NOT NULL,
-  `driver_name` varchar(45) NOT NULL,
-  `contact` decimal(10,0) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `location` varchar(45) NOT NULL,
-  `joinigDate` date NOT NULL,
-  `last_active_date` date DEFAULT NULL,
-  `car_id` int NOT NULL,
-  `userId` int NOT NULL,
-  `rating` decimal(2,1) DEFAULT NULL,
-  PRIMARY KEY (`driver_id`),
-  UNIQUE KEY `contact_UNIQUE` (`contact`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  KEY `fk_carid_idx` (`car_id`),
-  KEY `fk_user_id_idx` (`userId`),
-  CONSTRAINT `fk_car_id` FOREIGN KEY (`car_id`) REFERENCES `cars` (`car_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`userId`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `drivers`
---
-
-LOCK TABLES `drivers` WRITE;
-/*!40000 ALTER TABLE `drivers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `drivers` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `passengers`
---
-
-DROP TABLE IF EXISTS `passengers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `passengers` (
-  `pass_Id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `contact` decimal(10,0) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `location` varchar(45) NOT NULL,
-  `rating` decimal(2,1) DEFAULT NULL,
-  `prefferred_lang` varchar(45) DEFAULT NULL,
-  `emergency_contact` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`pass_Id`),
-  UNIQUE KEY `contact_UNIQUE` (`contact`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  KEY `fk_user_id_idx` (`user_id`),
-  CONSTRAINT `fk_user_id1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `passengers`
---
-
-LOCK TABLES `passengers` WRITE;
-/*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -158,7 +58,7 @@ CREATE TABLE `ride_passengers` (
   `passenger_id` int NOT NULL,
   PRIMARY KEY (`ride_id`,`passenger_id`),
   KEY `fk_ridePassenger_passId_idx` (`passenger_id`),
-  CONSTRAINT `fk_ridePassenger_passId` FOREIGN KEY (`passenger_id`) REFERENCES `passengers` (`pass_Id`),
+  CONSTRAINT `fk_ridePassenger_passId` FOREIGN KEY (`passenger_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `fk_ridePassenger_rideId` FOREIGN KEY (`ride_id`) REFERENCES `rides` (`rideId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -189,9 +89,7 @@ CREATE TABLE `rides` (
   `total_capacity` int NOT NULL,
   `current_passenger` int NOT NULL DEFAULT '0',
   `ride_status` varchar(10) NOT NULL DEFAULT 'ongoing',
-  PRIMARY KEY (`rideId`),
-  KEY `fk_driver_id_idx` (`driver_id`),
-  CONSTRAINT `fk_driver_id1` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`)
+  PRIMARY KEY (`rideId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -205,6 +103,37 @@ LOCK TABLES `rides` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `transactions`
+--
+
+DROP TABLE IF EXISTS `transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transactions` (
+  `trans_id` int NOT NULL AUTO_INCREMENT,
+  `trans_date` datetime NOT NULL,
+  `ammount` decimal(5,2) NOT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `sender_id` int NOT NULL,
+  `recipient_id` int NOT NULL,
+  PRIMARY KEY (`trans_id`),
+  KEY `fk_recipient_id_idx` (`recipient_id`),
+  KEY `fk_sender_id_idx` (`sender_id`),
+  CONSTRAINT `fk_recipient_id` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `fk_sender_id` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactions`
+--
+
+LOCK TABLES `transactions` WRITE;
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -215,7 +144,20 @@ CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `user_name` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  PRIMARY KEY (`user_id`)
+  `name` varchar(45) NOT NULL,
+  `contact` varchar(10) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  `car_id` int DEFAULT NULL,
+  `rating` decimal(2,1) DEFAULT '5.0',
+  `emergency_contact` varchar(10) NOT NULL,
+  `role` int NOT NULL,
+  `status` varchar(10) DEFAULT 'active',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `contact_UNIQUE` (`contact`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  KEY `fk_u_car_id_idx` (`car_id`),
+  CONSTRAINT `fk_u_car_id` FOREIGN KEY (`car_id`) REFERENCES `cars` (`car_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -237,4 +179,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-07  9:47:43
+-- Dump completed on 2024-02-07 18:16:26
