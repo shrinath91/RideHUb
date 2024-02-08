@@ -57,10 +57,12 @@ DROP TABLE IF EXISTS `login`;
 CREATE TABLE `login` (
   `login_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `login_time` datetime DEFAULT CURRENT_TIMESTAMP,
-  `logout_time` datetime DEFAULT NULL,
+  `password` varchar(45) NOT NULL,
+  `role_id` int DEFAULT NULL,
   PRIMARY KEY (`login_id`),
   KEY `user_id` (`user_id`),
+  KEY `fk_login_role_idx` (`role_id`),
+  CONSTRAINT `fk_login_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
   CONSTRAINT `login_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -115,9 +117,11 @@ CREATE TABLE `rides` (
   `ride_time` datetime NOT NULL,
   `fare` decimal(5,2) NOT NULL,
   `total_capacity` int NOT NULL,
-  `current_passenger` int NOT NULL DEFAULT '0',
+  `current_capacity` int NOT NULL DEFAULT '0',
   `ride_status` varchar(10) NOT NULL DEFAULT 'ongoing',
-  PRIMARY KEY (`rideId`)
+  PRIMARY KEY (`rideId`),
+  KEY `fk_ride_driver_id_idx` (`driver_id`),
+  CONSTRAINT `fk_ride_driver_id` FOREIGN KEY (`driver_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -128,6 +132,30 @@ CREATE TABLE `rides` (
 LOCK TABLES `rides` WRITE;
 /*!40000 ALTER TABLE `rides` DISABLE KEYS */;
 /*!40000 ALTER TABLE `rides` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `roles` (
+  `role_id` int NOT NULL,
+  `role_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'Admin'),(2,'Driver'),(3,'Passenger');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -142,13 +170,13 @@ CREATE TABLE `transactions` (
   `trans_date` datetime NOT NULL,
   `ammount` decimal(5,2) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
-  `sender_id` int NOT NULL,
-  `recipient_id` int NOT NULL,
+  `passenger_id` int NOT NULL,
+  `driver_id` int NOT NULL,
   PRIMARY KEY (`trans_id`),
-  KEY `fk_recipient_id_idx` (`recipient_id`),
-  KEY `fk_sender_id_idx` (`sender_id`),
-  CONSTRAINT `fk_recipient_id` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`user_id`),
-  CONSTRAINT `fk_sender_id` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`)
+  KEY `fk_recipient_id_idx` (`driver_id`),
+  KEY `fk_sender_id_idx` (`passenger_id`),
+  CONSTRAINT `fk_recipient_id` FOREIGN KEY (`driver_id`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `fk_sender_id` FOREIGN KEY (`passenger_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -170,23 +198,21 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(45) NOT NULL,
-  `password` varchar(45) DEFAULT NULL,
   `fname` varchar(45) NOT NULL,
   `lname` varchar(45) NOT NULL,
   `contact` varchar(10) NOT NULL,
   `email` varchar(45) NOT NULL,
   `address` varchar(45) NOT NULL,
-  `car_id` int DEFAULT NULL,
-  `rating` decimal(2,1) DEFAULT '5.0',
-  `emergency_contact` varchar(10) NOT NULL,
+  `rating` decimal(2,1) NOT NULL DEFAULT '5.0',
+  `emergency_contact` varchar(10) DEFAULT NULL,
   `role` int NOT NULL,
-  `status` varchar(10) DEFAULT 'active',
+  `status` varchar(10) NOT NULL DEFAULT 'active',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `contact_UNIQUE` (`contact`),
   UNIQUE KEY `email_UNIQUE` (`email`),
-  KEY `fk_u_car_id_idx` (`car_id`),
-  CONSTRAINT `fk_u_car_id` FOREIGN KEY (`car_id`) REFERENCES `cars` (`car_id`)
+  KEY `fk_roll_id_idx` (`role`),
+  KEY `fk_role_idx` (`role`),
+  CONSTRAINT `fk_role` FOREIGN KEY (`role`) REFERENCES `roles` (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -196,7 +222,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'shri','shrinath123','Shrinath','','989893294','abc@gmail.com','Pune',NULL,5.1,'6231984701',1,'active'),(2,'new_user','password123','New User','','9876543210','new_user@example.com','New Address',4,5.0,'1234567890',1,'active');
+INSERT INTO `users` VALUES (1,'Shrinath','','989893294','abc@gmail.com','Pune',5.1,'6231984701',1,'active'),(2,'New User','','9876543210','new_user@example.com','New Address',5.0,'1234567890',1,'active');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -209,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-08  9:00:58
+-- Dump completed on 2024-02-08 16:54:51
