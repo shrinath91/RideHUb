@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -16,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Getter
 @Setter
-
 @Entity
 @Table(name = "cars")
 public class Car {
@@ -30,22 +30,19 @@ public class Car {
     private int driverId;
 
     @Column(name = "reg_date")
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
 //    @Temporal(TemporalType.TIMESTAMP)
-    private Date registrationDate;
-
+    private LocalDate registrationDate;
     
-
-    @Column(name = "model")
+    @Column
     private String model;
 
-    @Column(name = "make")
+    @Column
     private String make;
-
-    @Column(name = "colour")
+    @Column
     private String colour;
     
-    @Column(name = "license_Plate")
+    @Column(name = "license_plate")
     private String license_Plate;
 
     
@@ -54,13 +51,10 @@ public class Car {
 		// TODO Auto-generated constructor stub
 	}
     
-	public Car( int driverId, Date registrationDate, String model, String make,
+	public Car( int driverId, String model, String make,
 			String colour, String license_Plate) {
 		super();
-		
 		this.driverId = driverId;
-		this.registrationDate = registrationDate;
-		
 		this.model = model;
 		this.make = make;
 		this.colour = colour;

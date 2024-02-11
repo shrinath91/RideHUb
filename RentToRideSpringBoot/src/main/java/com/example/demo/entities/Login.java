@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -14,12 +16,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "login")
+
 @Getter
 @Setter
+@Component
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "login")
 public class Login {
 	
 	@Id

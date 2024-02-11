@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.example.demo.services.CarService;
 		@PostMapping("/save_car")
 		public Car Save(@RequestBody Car c)
 		{
+			c.setRegistrationDate(LocalDate.now());
 			return cser.Save(c);
 		}
 		

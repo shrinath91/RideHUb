@@ -3,13 +3,12 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.Login;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
-import com.example.demo.services.LoginService;
+import com.example.demo.services.LoginSupportService;
 import com.example.demo.services.RoleService;
 import com.example.demo.services.UserService;
 
@@ -21,11 +20,10 @@ public class UserController {
 	RoleService rService;
 	
 	@Autowired
-	LoginService lser;
+	LoginSupportService lser;
 	
 	
 	
-//	@RequestMapping("/Save_User")
 	@PostMapping("/Save_User")
 	public String Save(@RequestBody User u)
 	{
@@ -37,7 +35,7 @@ public class UserController {
 		System.out.println(r);
 		
 		Login login=new Login(u.getLogin().getUsername(),u.getLogin().getPassword(),u.getLogin().getRole_id());
-		lser.Save_Login(login);
+		lser.save_Login(login);
 		
 		
 		User uu = user.Save(u);
