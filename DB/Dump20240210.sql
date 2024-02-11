@@ -58,14 +58,12 @@ DROP TABLE IF EXISTS `login`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `login` (
   `login_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
+  `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `role_id` int DEFAULT NULL,
   PRIMARY KEY (`login_id`),
-  KEY `user_id` (`user_id`),
   KEY `fk_login_role_idx` (`role_id`),
-  CONSTRAINT `fk_login_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
-  CONSTRAINT `login_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+  CONSTRAINT `fk_login_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -230,6 +228,7 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
+  `login_id` int DEFAULT NULL,
   `fname` varchar(45) NOT NULL,
   `lname` varchar(45) NOT NULL,
   `contact` varchar(10) NOT NULL,
@@ -237,14 +236,16 @@ CREATE TABLE `users` (
   `address` varchar(45) NOT NULL,
   `rating` decimal(2,1) NOT NULL DEFAULT '5.0',
   `emergency_contact` varchar(10) DEFAULT NULL,
-  `role` int NOT NULL,
+  `role_id` int NOT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'active',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `contact_UNIQUE` (`contact`),
   UNIQUE KEY `email_UNIQUE` (`email`),
-  KEY `fk_roll_id_idx` (`role`),
-  KEY `fk_role_idx` (`role`),
-  CONSTRAINT `fk_role` FOREIGN KEY (`role`) REFERENCES `roles` (`role_id`)
+  KEY `fk_roll_id_idx` (`role_id`),
+  KEY `fk_role_idx` (`role_id`),
+  KEY `fk_login_idx` (`login_id`),
+  CONSTRAINT `fk_login` FOREIGN KEY (`login_id`) REFERENCES `login` (`login_id`),
+  CONSTRAINT `fk_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -254,7 +255,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Shrinath','','989893294','abc@gmail.com','Pune',5.1,'6231984701',1,'active'),(2,'New User','','9876543210','new_user@example.com','New Address',5.0,'1234567890',1,'active');
+INSERT INTO `users` VALUES (1,NULL,'Shrinath','','989893294','abc@gmail.com','Pune',5.1,'6231984701',1,'active'),(2,NULL,'New User','','9876543210','new_user@example.com','New Address',5.0,'1234567890',1,'active');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -267,4 +268,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-08 17:27:27
+-- Dump completed on 2024-02-10  9:35:42
