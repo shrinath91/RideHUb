@@ -1,7 +1,9 @@
-import { useEffect, useReducer, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { login } from "../loggedSlice";
+// import { useEffect} from "react";
+import {useReducer} from "react";
+// import {useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import { login } from "../loggedSlice";
 
 
 
@@ -28,53 +30,54 @@ export default function RegistrationForm() {
                 const {key,value,touched,valid,error,formValid} = action.data;
                 return {...state,[key]:{value,touched,valid,error},formValid}
             case 'reset':
-                return init;        
+                return init; 
+            default:
         }
     }
 
     const[user,dispatch] = useReducer(reducer,init);
-    const[msg,setMsg] = useState("xx");
-    const[flag,setFlag]=useState(false);
-    const[flag1,setFlag1]=useState(false);
-    const[insertMsg, setInsertMsg] = useState("")
+    // const[msg,setMsg] = useState("xx");
+    // const[flag,setFlag]=useState(false);
+    // const[flag1,setFlag1]=useState(false);
+    // const[insertMsg, setInsertMsg] = useState("")
 
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
-    useEffect(()=>{
-        setMsg(localStorage.getItem("msg"))
-    },[]);
+    // useEffect(()=>{
+    //     setMsg(localStorage.getItem("msg"))
+    // },[]);
 
 
 
-    var submitData=(e)=>{
-        e.preventDefault();
-        const reqOptions={
-            method:"POST",
-            headers:{'content-type':'application/json'},
-            body: JSON.stringify({
-            role_name:user.role_name.value,
-            user_name:user.user_name.value,
-            password:user.password.value,
-            lname:user.lname.value,
-            fname:user.fname.value,
-            contact:user.contact.value,
-            email: user.email.value,
-            address:user.address.value,
-            emergency_contact:user.emergency_contact.value,
-        })
-    }
-    fetch("http://localhost:9000/register", reqOptions)
-    .then(resp => resp.text())
-    .then(data => setInsertMsg(data) )
+    // var submitData=(e)=>{
+    //     e.preventDefault();
+    //     const reqOptions={
+    //         method:"POST",
+    //         headers:{'content-type':'application/json'},
+    //         body: JSON.stringify({
+    //         role_name:user.role_name.value,
+    //         user_name:user.user_name.value,
+    //         password:user.password.value,
+    //         lname:user.lname.value,
+    //         fname:user.fname.value,
+    //         contact:user.contact.value,
+    //         email: user.email.value,
+    //         address:user.address.value,
+    //         emergency_contact:user.emergency_contact.value,
+    //     })
+    // }
+    // fetch("http://localhost:9000/register", reqOptions)
+    // .then(resp => resp.text())
+    // .then(data => setInsertMsg(data) )
         
-        navigate('/login',{state:user})
+    //     navigate('/login',{state:user})
         
-    }
+    // }
     
 
     const validateData = (key,val) => {
         let valid = true;
-        let error = ""
+        let error = "";
         switch(key)
         {
 
@@ -128,7 +131,7 @@ export default function RegistrationForm() {
 
                break;
             case 'email':
-                let patternemail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
+                let patternemail = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/ 
                if(!patternemail.test(val))
                {
                   valid = false;
@@ -152,6 +155,7 @@ export default function RegistrationForm() {
                }
 
                break;
+               default:
         }
         return { valid: valid, error: error}
     }
@@ -283,12 +287,14 @@ export default function RegistrationForm() {
 
                 <input type="submit" value="Register"
                 disabled={!user.formValid} 
-                onClick={(e)=>{submitData(e)}}className="form-control" />
+                // onClick={(e)=>{submitData(e)}}className="form-control" 
+                />
                 <br/>
+
                 <input type="reset" value="Clear" 
                 onClick={()=>{dispatch({type:"reset"})}}className="form-control btn btn-primary"/>
                   <div className="text-center mb-3">
-                        <p>Registered completed..<a href="/login">LoginPage</a></p>
+                        <p>Registered User?<a href="/login">LoginPage</a></p>
                     </div>
             </form>
             </div>
