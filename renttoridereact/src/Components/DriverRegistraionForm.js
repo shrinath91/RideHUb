@@ -65,10 +65,11 @@ export default function DriverRegistrationForm() {
     let error = "";
     switch (key) {
       case "user_name":
-        let patternuser_name = /^[A-Z]{1}[a-z]+ [A-Z]{1}[a-z]{3,}$/;
+        // let patternuser_name = /^[A-Z]{1}[a-z]+ [A-Z]{1}[a-z]{3,}$/;
+        let patternuser_name = /^[A-Za-z]+@\d+$/;
         if (!patternuser_name.test(val)) {
           valid = false;
-          error = "Username shoud of form 'Firstname Lastname'";
+          error = "Username shoud of form 'xyz@123'";
         }
         break;
       case "password":
@@ -196,7 +197,7 @@ export default function DriverRegistrationForm() {
           >
             {user.password.error}
           </div>
-          <span> fname : </span>{" "}
+          <span> First Name : </span>{" "}
           <input
             type="text"
             name="fname"
@@ -221,7 +222,7 @@ export default function DriverRegistrationForm() {
           >
             {user.fname.error}
           </div>
-          <span> lname : </span>{" "}
+          <span> Last Name : </span>{" "}
           <input
             type="text"
             name="lname"
@@ -321,7 +322,7 @@ export default function DriverRegistrationForm() {
           >
             {user.address.error}
           </div>
-          <span> emergency_contact : </span>{" "}
+          <span> Emergency Contact : </span>{" "}
           <input
             type="text"
             name="emergency_contact"

@@ -285,14 +285,13 @@ export default function RegistrationForm() {
                     { user.emergency_contact.error}
                 </div>
 
-                <input type="submit" value="Register"
+                <input type="submit" value="Register" className="btn btn-primary"
                 disabled={!user.formValid} 
                 // onClick={(e)=>{submitData(e)}}className="form-control" 
                 />
-                <br/>
 
                 <input type="reset" value="Clear" 
-                onClick={()=>{dispatch({type:"reset"})}}className="form-control btn btn-primary"/>
+                onClick={()=>{dispatch({type:"reset"})}}className="btn btn-danger"/>
                   <div className="text-center mb-3">
                         <p>Registered User?<a href="/login">LoginPage</a></p>
                     </div>
