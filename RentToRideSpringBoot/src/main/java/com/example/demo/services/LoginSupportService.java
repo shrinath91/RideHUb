@@ -9,9 +9,9 @@ import com.example.demo.repository.LoginSupportRepository;
 public class LoginSupportService {
 	@Autowired
 	LoginSupportRepository lrepo;
-	public void save_Login(Login l)
+	public Login save_Login(Login l)
 	{
-		lrepo.save(l);
+		return lrepo.save(l);
 	}
 	
 	public Login getUser(String uname,String pwd)

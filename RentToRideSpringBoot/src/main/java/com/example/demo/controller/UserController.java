@@ -24,21 +24,21 @@ public class UserController {
 	
 	
 	
-	@PostMapping("/Save_User")
-	public String Save(@RequestBody User u)
-	{
-		System.out.println(u);
-		System.out.println(u.getRole());
-		System.out.println("hello i am in");
-		Role r = rService.getRole(1);
-		u.setRole(r);
-		System.out.println(r);
-		
-		Login login=new Login(u.getLogin().getUsername(),u.getLogin().getPassword(),u.getLogin().getRole_id());
-		lser.save_Login(login);
-		
-		
-		User uu = user.Save(u);
-		return uu.toString();
-	}
+//	@PostMapping("/Save_User")
+//	public String Save(@RequestBody User u)
+//	{
+//		System.out.println(u);
+//		System.out.println(u.getRole());
+//		System.out.println("hello i am in");
+//		Role r = rService.getRole(1);
+//		u.setRole(r);
+//		System.out.println(r);
+//		
+//		Login login=new Login(u.getLogin().getUsername(),u.getLogin().getPassword(),u.getLogin().getRole_id());
+//		lser.save_Login(login);
+//		
+//		
+//		User uu = user.Save(u);
+//		return uu.toString();
+//	}
 }

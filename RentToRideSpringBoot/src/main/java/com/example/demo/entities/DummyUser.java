@@ -6,25 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
 public class DummyUser {
-	
-	private int user_id;
-	private String username;
+	private int role;
+	private String user_name;
 	private String password;
 	private String fname;
 	private String lname;
 	private String contact;
 	private String email;
 	private String address;
-	private float decimal;
 	private String emergency_contact;
-	private String role_id;
-	private String status;
-
 }

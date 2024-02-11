@@ -148,7 +148,7 @@ export default function LoginPage()
                         </div>
                     </div>
                     <div className="text-center mb-3">
-                        <p>Not a member? <a href="/register">Register</a></p>
+                        <p>Not a member? <a href="/driverregister">Register</a></p>
                     </div>
             </form>
             {/* <p> {JSON.stringify(user)} </p>

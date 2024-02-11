@@ -4,11 +4,14 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -36,8 +39,10 @@ public class Login {
 	@Column
 	private  String password;
 	
-	@Column 
-	private int role_id; 
+	@JsonIgnoreProperties("login")
+    @ManyToOne
+    @JoinColumn(name="role_id")
+    private Role role_id;
 	
 	@JsonIgnoreProperties("login")
 	@OneToOne(mappedBy = "login")
@@ -45,7 +50,7 @@ public class Login {
 
 	
 	
-	public Login(String username, String password, int role_id) {
+	public Login(String username, String password, Role role_id) {
 		super();
 		this.username = username;
 		this.password = password;

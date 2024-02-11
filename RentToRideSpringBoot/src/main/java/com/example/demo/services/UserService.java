@@ -12,14 +12,9 @@ public class UserService {
 	
 	@Autowired
 	UserRepository urepo;
-	//roleRep;
 	
-	public User Save(User u)//dummy d;
+	public User save(User u)
 	{
-		//user u = new user(d.grtid(),tgbgt);
-		//role r = new role(rg,vet,fb);
-		//rolerepo.save(r);
-		//uro.save(u);
 		return urepo.save(u);
 	}
 }

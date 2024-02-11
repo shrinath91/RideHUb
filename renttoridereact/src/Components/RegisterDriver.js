@@ -253,7 +253,7 @@ export default function RegisterDriver() {
                 <input type="submit" value="Register"
                 disabled={!user.formValid} 
                 onClick={(e)=>{submitData(e)}}className="form-control btn btn-primary" />
-               
+                
                 <br/>
                 <input type="reset" value="Clear" 
                 onClick={()=>{dispatch({type:"reset"})}}className="form-control btn btn-primary"/>

@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -24,6 +26,7 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
+@Component
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -32,9 +35,9 @@ public class User {
     @Column(name = "user_id")
     private int userId;
     
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="login_id")
     @JsonIgnoreProperties("users")
+    @OneToOne
+    @JoinColumn(name="login_id")
     private Login login;
     
     @Column(name = "fname")
@@ -57,12 +60,6 @@ public class User {
 
     @Column(name = "emergency_contact")
     private String emergencyContact;
-
-    
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="role_id")
-    @JsonIgnoreProperties("users")
-    private Role role;
 
     @Column(name = "status")
     private String status;
