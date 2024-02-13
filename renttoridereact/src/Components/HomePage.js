@@ -22,8 +22,8 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
                 </li>
               ) : (
                 <li className="nav-item">
-                  <Link className="btn btn-outline-primary" to="/login">
-                    Login
+                  <Link className="btn btn-outline-primary" to="/logout">
+                    Logout
                   </Link>
                 </li>
               )}

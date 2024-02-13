@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"
 import { login, logout } from "../loggedSlice";
 import { useEffect, useReducer, useState } from "react";
-
+//commit by omkar
 export default function LoginPage() 
 {
     const init = {
@@ -48,22 +48,48 @@ export default function LoginPage()
             password:user.password.value,
         })
     }
-        fetch("http://localhost:9000/login", reqOptions)
-    .then(resp => resp.text())
+    fetch("http://localhost:8080/login", reqOptions)
+    .then(resp => resp.json())
     .then(data => {
         // Handle the response from the server
-        console.log(data);
-        if (data==='true') {
+        console.log(data.role_id);
+        if (data!==null) {
           // Redirect or perform other actions for successful login
           alert('Login successful');
-          dispatch(login());
-            navigate("/home")
-        } 
+
+            //to direct to individual home page
+            dispatch(login());
+            if( data.role_id == 1)
+            {
+                console.log(data.role_id);
+                navigate("/admin_home")
+            }
+            else if(data.role_id==2)
+            {
+                console.log(data.role_id);
+                navigate("/driver_home")
+            }
+            else if(data.role_id==3)
+            {
+                console.log(data.role_id);
+                navigate("/passenger_home")
+            }
+          
+         } 
         else {
-          // Handle unsuccessful login
-          alert('Invalid email or password');
+            // Handle unsuccessful login
+            //   throw new Error("error");
+            alert('Incorrect password');
+            dispatch1({ type: "update", data: { key: 'password', value: '', touched: true, valid: false, error: "Incorrect password", formValid: false } });
+        
         }
       })
+      .catch(error => {
+        // Handle fetch errors here
+        console.error('Fetch error:', error);
+        // Optionally, you can display a generic error message to the user
+        alert('Incorrect Password');
+    });
     }
 
     const validateData = (key,val) => {
@@ -72,11 +98,12 @@ export default function LoginPage()
         switch(key)
         {
             case 'user_name':
-               var pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
+            //    var pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
+               var pattern = /^[A-Za-z]+@\d+$/;
                if(!pattern.test(val))
                {
                   valid = false;
-                  error = "Couldn't find this email"
+                  error = "Please Enter Valid Username"
                }
 
                break;
@@ -118,11 +145,11 @@ export default function LoginPage()
         <div className="shadow-lg p-4 m-5" style={{"width": '50rem'}}>
                 <h1 className="d-flex justify-content-center text-success mb-3">Please Login!</h1>
             <form>
-               Email :
+               Username :
                 <input type="email" name="uid" 
                     value={user.user_name.value}
                     onChange={(e)=>{handleChange("user_name",e.target.value)}} 
-                    onBlur={(e)=>{handleChange("user_name",e.target.value)}} className="form-control" placeholder="Enter your email" required/>
+                    onBlur={(e)=>{handleChange("user_name",e.target.value)}} className="form-control" placeholder="Enter your Username" required/>
                 <br/>
                 <div style={{ display: user.user_name.touched && !user.user_name.valid  ?"block":"none", color: "red"}}>
                     { user.user_name.error}

@@ -35,13 +35,4 @@ public class Role {
 	private int role_id;
 	@Column
 	private String role_name;
-	@OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
-	@JsonIgnoreProperties("role")
-	List<User> users;
-	public void setUsers(List<User> us) {
-		for(User u : us) {
-			u.setRole(this);
-		}
-		users = us;
-	}
 }

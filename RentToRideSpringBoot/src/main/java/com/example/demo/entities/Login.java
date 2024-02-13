@@ -39,9 +39,13 @@ public class Login {
 	@OneToOne(mappedBy = "login")
 	private User user;
 
+<<<<<<< Updated upstream
 	
 	
 	public Login(String username, String password, int role_id) {
+=======
+	public Login(String username, String password, Role role_id) {
+>>>>>>> Stashed changes
 		super();
 		this.username = username;
 		this.password = password;
