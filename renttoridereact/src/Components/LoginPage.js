@@ -156,7 +156,7 @@ export default function LoginPage()
                 </div>
                 <br/>
                 Password :
-                <input type="password" name="pwd" 
+                <input type="text" name="pwd" 
                 value={user.password.value}
                 onChange={(e)=>{handleChange("password",e.target.value)}} 
                 onBlur={(e)=>{handleChange("password",e.target.value)}} className="form-control" placeholder="Enter your password" required/>
