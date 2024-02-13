@@ -48,14 +48,17 @@ export default function DriverRegistrationForm() {
         lname: user.lname.value,
         fname: user.fname.value,
         contact: user.contact.value,
+        role: role,
         email: user.email.value,
         address: user.address.value,
         emergency_contact: user.emergency_contact.value,
       }),
     };
-    fetch("http://localhost:9000/register", reqOptions)
-      .then((resp) => resp.text())
-      .then((data) => setInsertMsg(data));
+    fetch("http://localhost:8080/register", reqOptions)
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(JSON.stringify(data));
+    });
 
     navigate("/", { state: user });
   };
@@ -135,7 +138,7 @@ export default function DriverRegistrationForm() {
       data: { key, value, touched: true, valid, error, formValid },
     });
   };
-
+  const[role,setRole] = useState("");
   return (
     <div className="container d-flex justify-content-center ">
       <div className="shadow-lg p-4 m-5" style={{ width: "50rem" }}>
@@ -143,6 +146,12 @@ export default function DriverRegistrationForm() {
           Registration Form !
         </h1>
         <form>
+            <label>Role Name:</label>
+          <select id="role_name" name="role_name" required onChange={(e)=>{setRole(e.target.value); console.log(e.target.value)}}>
+            <option value="">Select</option>
+            <option value="3">Passenger</option>
+            <option value="2">Driver</option>
+          </select><br/><br/>
           <span> Username : </span>
           <input
             type="text"
