@@ -21,6 +21,7 @@ public class DummyDriverRegistration {
 	String registration_no;
 	String make;
 	String colour;
+	int rating;
 	public int getUser_id() {
 		return user_id;
 	}

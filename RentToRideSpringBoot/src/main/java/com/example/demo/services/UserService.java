@@ -34,4 +34,27 @@ public class UserService {
 		}
 		return loginObj;
 	}
+	public void disapproveLogin(int user_id) {
+		// Fetch the login by ID
+		UserEntity user = urepo.findById(user_id).get();
+
+		// Perform any business logic related to rejecting the login
+		user.setStatus(0);
+
+		// Save the updated login entity
+		urepo.save(user);
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+
+	// Approval
+	public void approveLogin(int user_id) {
+		urepo.findById(user_id).ifPresent(login -> {
+			// Perform the approval logic here
+			// For example, set an approval status field on the Login entity
+			login.setStatus(1);
+			urepo.save(login);
+		});
+		// If the login is not present, no need to explicitly handle it
+	}
 }

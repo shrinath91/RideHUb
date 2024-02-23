@@ -1,4 +1,6 @@
 package com.example.demo.entities;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +25,9 @@ public class UserEntity {
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	RoleEntity role_id;
+	
+	@OneToMany(mappedBy="driver_user_id")
+	List<DriverEntity> drivers;
 	@Column
 	private int status;
 	public int getUser_id() {

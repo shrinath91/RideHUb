@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +23,16 @@ import com.example.demo.services.UserService;
 public class DriverController {
 	@Autowired
 	DriverService dservice;
-
 	@Autowired
 	UserService userservice;
 
 	@Autowired
 	RoleService rservice;
+	
+	 @GetMapping("/getDriverDetails/{ride_driver_id}")
+	    public DriverEntity getDriverDetails(@PathVariable int ride_driver_id) {
+	        return dservice.getDriverDetails(ride_driver_id);
+	    }
 
 	@PostMapping("/saveDriver")
 	public DriverEntity saveDriver(@RequestBody DriverEntity d) {
@@ -53,6 +58,7 @@ public class DriverController {
 			    ddr.getEmail(),
 			    ddr.getEmergency_contact(),
 			    ddr.getLicence_no(),
+			    5,
 			    ddr.getModel(), 
 			    ddr.getNo_plate(),
 			    ddr.getRegistration_no(),

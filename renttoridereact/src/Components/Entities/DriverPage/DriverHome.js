@@ -1,30 +1,45 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-const AdminHome = ({ isLoggedIn, handleLogout }) => {
+import { useEffect,useState } from 'react';
+
+const DriverHome = ({ isLoggedIn, handleLogout}) => {
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('loggedin'));
+    setUsername(storedUser.username);
+  }, []);
   return (
     <div>
       {/* Navigation Bar */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
-          <a className="navbar-brand" href="#">Admin Home</a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div className="container">
+          <Link className="navbar-brand" to="/driver_home">
+            Driver Home
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">Show Passengers</a>
+                <Link className="nav-link" to="/postRides">Post Rides</Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link"  href="#">Show Drivers</a>
+                <Link className="nav-link" to="/myRide">My Rides</Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Show Transactions</a>
+                <Link className="nav-link" to="/oldRide">Old Rides</Link>
               </li>
             </ul>
-          </div>
-        </div>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto">
               {isLoggedIn ? (
                 <li className="nav-item">
@@ -44,12 +59,14 @@ const AdminHome = ({ isLoggedIn, handleLogout }) => {
               )}
             </ul>
           </div>
+        </div>
       </nav>
-    <div>
-    <h1>Admin page</h1>
-    </div>
+      
+      {/* Page Content */}
+     
+      <h4>Welcome {username}</h4>
     </div>
   );
 };
 
-export default AdminHome;
+export default DriverHome;

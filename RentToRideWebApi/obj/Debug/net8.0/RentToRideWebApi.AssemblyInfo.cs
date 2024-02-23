@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RentToRideWebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cb1cb7d6484bdfb49f4ff3711ad358a39f169609")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7df2ce98475689d2f5e9cdcbf7a38af57cd973b6")]
 [assembly: System.Reflection.AssemblyProductAttribute("RentToRideWebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RentToRideWebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

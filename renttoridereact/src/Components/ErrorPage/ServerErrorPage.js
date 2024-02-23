@@ -2,7 +2,7 @@ import React from 'react'
 
 function ServerErrorPage() {
   return (
-    <div>Welcome to ServerErrorPage</div>
+    <div>oops!somthing went wrong</div>
   )
 }
 

@@ -1,11 +1,13 @@
 package com.example.demo.entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class DummyRideEntity {
 	private String start_location;
 	private String end_location;
-	private Date ride_time;
+	private LocalDateTime ride_time;
 	private float fare;
 	private int total_capacity;
 	private int current_capacity;
@@ -23,10 +25,10 @@ public class DummyRideEntity {
 	public void setEnd_location(String end_location) {
 		this.end_location = end_location;
 	}
-	public Date getRide_time() {
+	public LocalDateTime getRide_time() {
 		return ride_time;
 	}
-	public void setRide_time(Date ride_time) {
+	public void setRide_time(LocalDateTime ride_time) {
 		this.ride_time = ride_time;
 	}
 	public float getFare() {
@@ -58,6 +60,12 @@ public class DummyRideEntity {
 	}
 	public void setRide_driver_id(int ride_driver_id) {
 		this.ride_driver_id = ride_driver_id;
+	}
+	@Override
+	public String toString() {
+		return "DummyRideEntity [start_location=" + start_location + ", end_location=" + end_location + ", ride_time="
+				+ ride_time + ", fare=" + fare + ", total_capacity=" + total_capacity + ", current_capacity="
+				+ current_capacity + ", ride_status=" + ride_status + ", ride_driver_id=" + ride_driver_id + "]";
 	}
 	
 	

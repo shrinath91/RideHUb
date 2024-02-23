@@ -30,5 +30,12 @@ public class DriverService {
 			return null;
 		}
 	}
+	public DriverEntity getDriverByUserId(int id) {
+		return drepo.getDriverByuserId(id);
+	}
+	
+	 public DriverEntity getDriverDetails(int ride_driver_id) {
+	        return drepo.findById(ride_driver_id).orElse(null);
+	    } 
 	
 }

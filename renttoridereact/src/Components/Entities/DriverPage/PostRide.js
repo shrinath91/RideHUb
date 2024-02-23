@@ -2,26 +2,24 @@ import { useEffect } from "react";
 import { useReducer } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function PostRide() {
+export default function PostRide({ isLoggedIn, handleLogout, username }) {
   const init = {
-    start_location: { value: '', valid: false, touched: false, error: '' },
-    end_location: { value: '', valid: false, touched: false, error: '' },
-    ride_time: { value: '', valid: false, touched: false, error: '' },
-    fare: { value: '', valid: false, touched: false, error: '' },
-    total_capacity: { value: '', valid: false, touched: false, error: '' },
-    current_capacity: { value: '', valid: false, touched: false, error: '' },
-    formvalid: false,
+    start_location: { val: '', valid: false, touched: false, error: '' },
+    end_location: { val: '', valid: false, touched: false, error: '' },
+    ride_time: { val: '', valid: false, touched: false, error: '' },
+    fare: { val: '', valid: false, touched: false, error: '' },
+    total_capacity: { val: '', valid: false, touched: false, error: '' },
+    current_capacity: { val: '', valid: false, touched: false, error: '' },
+    formValid: false,
   };
-
-  const data=localStorage.getItem("loggedin");
-  console.log(data);
 
   const reducer = (state, action) => {
     switch (action.type) {
       case "update":
-        const { key, value, touched, valid, error, formvalid } = action.data;
-        return { ...state, [key]: { value, touched, valid, error }, formvalid };
+        const { key, val, touched, valid, error, formValid } = action.data;
+        return { ...state, [key]: { val, touched, valid, error }, formValid };
       case "reset":
         return init;
       default:
@@ -31,101 +29,157 @@ export default function PostRide() {
   const [user, dispatch] = useReducer(reducer, init);
   const [msg, setMsg] = useState("xx");
   //const [insertMsg, setInsertMsg] = useState("");
-  console.log({msg});
+  //console.log({msg});
   let navigate = useNavigate();
 
   useEffect(() => {
-    setMsg(localStorage.getItem("msg"));
+    setMsg(JSON.parse(localStorage.getItem("loggedin")));
   }, []);
 
-  var submitData = (e) => {
+  const submitData = (e) => {
     e.preventDefault();
     const reqOptions = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        ride_driver_id:user.ride_driver_id.value,
-        start_location: user.start_location.value,
-        end_location: user.end_location.value,
-        ride_time: user.ride_time.value,
-        fare: user.fare.value,
-        total_capacity: user.total_capacity.value,
-        current_capacity: user.current_capacity.value,
-        ride_status:user.ride_status.value
+        ride_driver_id: msg.user_id,
+        start_location: user.start_location.val,
+        end_location: user.end_location.val,
+        ride_time: user.ride_time.val,
+        fare: user.fare.val,
+        total_capacity: user.total_capacity.val,
+        current_capacity: user.current_capacity.val,
       }),
     };
+    console.log("88888888888888888888888888888888888888888888888888")
+    console.log(JSON.stringify(user))
+    console.log(reqOptions.body);
+
+
     fetch("http://localhost:8080/postRide", reqOptions)
-    .then((resp) => resp.json())
-    .then((data) => {
-      console.log(JSON.stringify(data));
-    });
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(JSON.stringify(data));
+      });
 
     navigate("/driver_home", { state: user });
   };
 
-  const validateData = (key, value) => {
+  const validateData = (key, val) => {
     let valid = true;
     let error = "";
     switch (key) {
-
       case 'start_location':
-        case 'end_location':
-          // if (!value.trim()) {
-          //   valid = false;
-          //   error = 'This field is required';
-          // }
-          break;
-        case 'ride_time':
-          // if (!value) {
-          //   valid = false;
-          //   error = 'This field is required';
-          // }
-          break;
-        case 'fare':
-        case 'total_capacity':
-        case 'current_capacity':
-          // if (!value || isNaN(value) || value <= 0) {
-          //   valid = false;
-          //   error = 'Please enter a valid number';
-          // }
-          break;
-        default:
+      case 'end_location':
+        if (!val.trim()) {
+          valid = false;
+          error = 'This field is required';
+        }
+        break;
+      case 'ride_time':
+        const rideTime = new Date(val).getTime();
+        const currentTime = new Date().getTime();
+        if (rideTime <= currentTime) {
+          valid = false;
+          error = 'Ride time must be in the future';
+        }
+        break;
+      case 'fare':
+      case 'total_capacity':
+      case 'current_capacity':
+        if (!val || isNaN(val) || val <= 0) {
+          valid = false;
+          error = 'Please enter a valid number';
+        }
+        break;
+      default:
     }
     return { valid: valid, error: error };
   };
+  
 
-  // const handleChange = (key, value) => {
-  //   const { valid, error } = validateData(key, value);
-  //   let formvalid = true;
+  // const handleChange = (key, val) => {
+  //   const { valid, error } = validateData(key, val);
+  //   let formValid = true;
   //   for (let k in user) {
   //     if (user[k].valid === false) {
-  //       formvalid = false;
+  //       formValid = false;
   //       break;
   //     }
   //   }
-  //   console.log(formvalid);
+  //   console.log(formValid);
   //   dispatch({
   //     type: "update",
-  //     data: { key, value, touched: true, valid, error, formvalid },
+  //     data: { key, val, touched: true, valid, error, formValid },
   //   });
   // };
   const handleChange = (key, value) => {
     const { valid, error } = validateData(key, value);
-    let formvalid = true;
+    let formValid = true;
     for (let k in user) {
       if (user[k].valid === false) {
-        formvalid = false;
+        formValid = false;
         break;
       }
     }
-    console.log(formvalid);
+    console.log(formValid);
     dispatch({
       type: "update",
-      data: { key, value: value, touched: true, valid, error, formvalid },
+      data: { key, val: value, touched: true, valid, error, formValid },
     });
   };
-  
+
   return (
+
+    <div>
+      {/* Navigation Bar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container">
+          <Link className="navbar-brand" to="/driver_home">
+            Driver Home
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link className="nav-link" to="/myRide">My Rides</Link>
+              </li>
+             
+              <li className="nav-item">
+                <Link className="nav-link" to="/oldRide">Old Rides</Link>
+              </li>
+            </ul>
+            <ul className="navbar-nav ms-auto">
+              {isLoggedIn ? (
+                <li className="nav-item">
+                  <button
+                    className="btn btn-outline-text-success"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              ) : (
+                <li className="nav-item">
+                  <Link className="btn btn-outline-primary" to="/logout">
+                    Logout
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
+        </div>
+      </nav>
     <div className="container d-flex justify-content-center ">
       <div className="shadow-lg p-4 m-5" style={{ width: "50rem" }}>
         <h1 className="d-flex justify-content-center text-success mb-3">
@@ -136,7 +190,7 @@ export default function PostRide() {
           <input
             type="text"
             name="start_location"
-            value={user.start_location.value}
+            value={user.start_location.val}
             onChange={(e) => {
               handleChange("start_location", e.target.value);
             }}
@@ -163,7 +217,7 @@ export default function PostRide() {
           <input
             type="text"
             name="end_location"
-            value={user.end_location.value}
+            val={user.end_location.val}
             onChange={(e) => {
               handleChange("end_location", e.target.value);
             }}
@@ -188,9 +242,9 @@ export default function PostRide() {
           </div>
           <span> Ride Time : </span>{" "}
           <input
-            type="time"
+            type="datetime-local"
             name="ride_time"
-            value={user.ride_time.value}
+            val={user.ride_time.val}
             onChange={(e) => {
               handleChange("ride_time", e.target.value);
             }}
@@ -215,7 +269,7 @@ export default function PostRide() {
           <input
             type="number"
             name="fare"
-            value={user.fare.value}
+            val={user.fare.val}
             onChange={(e) => {
               handleChange("fare", e.target.value);
             }}
@@ -240,7 +294,7 @@ export default function PostRide() {
           <input
             type="number"
             name="total_capacity"
-            value={user.total_capacity.value}
+            val={user.total_capacity.val}
             onChange={(e) => {
               handleChange("total_capacity", e.target.value);
             }}
@@ -265,7 +319,7 @@ export default function PostRide() {
           <input
             type="text"
             name="current_capacity"
-            value={user.current_capacity.value}
+            val={user.current_capacity.val}
             onChange={(e) => {
               handleChange("current_capacity", e.target.value);
             }}
@@ -289,8 +343,7 @@ export default function PostRide() {
           </div>
           <input
             type="submit"
-            value="Register"
-            disabled={!user.formvalid}
+            val="Register"
             onClick={(e) => {
               submitData(e);
             }}
@@ -299,7 +352,7 @@ export default function PostRide() {
           <br />
           <input
             type="reset"
-            value="Clear"
+            val="Clear"
             onClick={() => {
               dispatch({ type: "reset" });
             }}
@@ -307,6 +360,7 @@ export default function PostRide() {
           />
         </form>
       </div>
+    </div>
     </div>
   );
 }

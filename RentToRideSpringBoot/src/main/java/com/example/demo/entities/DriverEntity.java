@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -16,7 +17,7 @@ public class DriverEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int driver_id;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "driver_user_id")
 	private UserEntity driver_user_id;
 
@@ -50,11 +51,24 @@ public class DriverEntity {
 	@Column
 	private String colour;
 	
+	
 	@Column
 	private String registration_no;
 	
 	@Column
 	private String no_plate;
+	
+	@Column
+	 private int rating;
+	
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
 
 	public int getDriver_id() {
 		return driver_id;
@@ -177,7 +191,7 @@ public class DriverEntity {
 	}
 
 	public DriverEntity(String fname2, String lname2, String address2, String contact2, String email2,
-			String emergency_contact2, String licence_no2, String model2, String no_plate2, String registration_no2,
+			String emergency_contact2, String licence_no2 ,int rating,  String model2, String no_plate2, String registration_no2,
 			String make2, String colour2, UserEntity ue) {
 		this.fname=fname2;
 		this.lname=lname2;
@@ -186,6 +200,7 @@ public class DriverEntity {
 		this.email=email2;
 		this.emergency_contact=emergency_contact2;
 		this.licence_no=licence_no2;
+		this.rating = rating;
 		this.model=model2;
 		this.no_plate=no_plate2;
 		this.registration_no=registration_no2;

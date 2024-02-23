@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
@@ -16,29 +17,38 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="rides")
 @Component
-public class RideEntitiy {
+public class RideEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
 	private int ride_id;
+	
 	@ManyToOne
 	@JoinColumn(name="ride_driver_id")
 	private DriverEntity ride_driver_id;
+	
 	@Column
 	private String start_location;
+	
 	@Column
 	private String end_location;
+	
 	@Column
-	private Date ride_time;
+	private LocalDateTime ride_time;
+	
 	@Column
 	private float fare;
+	
 	@Column
 	private int total_capacity;
+	
 	@Column
 	private int current_capacity;
+	
 	@Column
 	private String ride_status;
+	
 	public int getRide_id() {
 		return ride_id;
 	}
@@ -63,10 +73,10 @@ public class RideEntitiy {
 	public void setEnd_location(String end_location) {
 		this.end_location = end_location;
 	}
-	public Date getRide_time() {
+	public LocalDateTime getRide_time() {
 		return ride_time;
 	}
-	public void setRide_time(Date ride_time) {
+	public void setRide_time(LocalDateTime ride_time) {
 		this.ride_time = ride_time;
 	}
 	public float getFare() {
@@ -93,11 +103,11 @@ public class RideEntitiy {
 	public void setRide_status(String ride_status) {
 		this.ride_status = ride_status;
 	}
-	public RideEntitiy() {
+	public RideEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public RideEntitiy(DriverEntity ride_driver_id, String start_location, String end_location, Date ride_time,
+	public RideEntity(DriverEntity ride_driver_id, String start_location, String end_location, LocalDateTime ride_time,
 			float fare, int total_capacity, int current_capacity, String ride_status) {
 		super();
 		this.ride_driver_id = ride_driver_id;
@@ -109,10 +119,5 @@ public class RideEntitiy {
 		this.current_capacity = current_capacity;
 		this.ride_status = ride_status;
 	}
-
 	
-	
-	
-	
-
 }

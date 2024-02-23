@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.PassengerEntity;
 import com.example.demo.entities.DummyPassengerRegistration;
+import com.example.demo.entities.DummySearchRide;
+import com.example.demo.entities.DummySearchRide;
 import com.example.demo.entities.RoleEntity;
 import com.example.demo.entities.UserEntity;
 import com.example.demo.services.PassengerService;
+import com.example.demo.services.RideService;
 import com.example.demo.services.RoleService;
 import com.example.demo.services.UserService;
 
@@ -29,6 +32,9 @@ public class PassengerController {
 
 	@Autowired
 	RoleService rservice;
+	
+	@Autowired
+	RideService rser;
 
 	@PostMapping("/savePassenger")
 	public PassengerEntity savePassenger(@RequestBody PassengerEntity d) {
@@ -49,5 +55,17 @@ public class PassengerController {
 		PassengerEntity d = new PassengerEntity(ue,dpr.getFname(),dpr.getLname(),dpr.getContact(),dpr.getEmail(),dpr.getAddress(),dpr.getRating(),dpr.getEmergency_contact());
 		dpr.setPassenger_user_id(ue.getUser_id());
 		return dservice.savePassenger(d);
+	}
+	
+	@PostMapping("/searchRide")
+	public List<Object> searchRide(@RequestBody DummySearchRide dsr)
+	{
+		
+		String start_loc=dsr.getStart_location();
+		String end_loc=dsr.getEnd_location();
+		System.out.print(""+start_loc+" "+end_loc+"*");
+		
+		
+		return rser.searchRide(start_loc,end_loc);
 	}
 }
