@@ -1,186 +1,175 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"
-import { login, logout } from "../loggedSlice";
-import { useEffect, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function LoginPage() 
-{
-    const init = {
-        user_name: {value:"",valid: false, touched: false, error:""},
-        password: {value:"",valid: false, touched: false, error:""},
-        formValid: false
+function LoginPage() {
+  //inital object
+  const init = {
+    username: "",
+    password: "",
+  };
+
+  //function for dispatcher
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "update":
+        return { ...state, [action.fld]: action.val };
+      case "reset":
+        return init;
+      default:
     }
+  };
 
-    const reducer = (state,action) => {
-        switch(action.type)
-        {
-            case 'update':
-                //object destructuring
-                const {key,value,touched,valid,error,formValid} = action.data;
-                return {...state,[key]:{value,touched,valid,error},formValid}
-            case 'reset':
-                return init;        
-        }
-    }
+  const navigate = useNavigate();
 
-    const[user,dispatch1] = useReducer(reducer,init);
-    const[msg,setMsg] = useState("xx");
-    const[flag,setFlag]=useState(false);
-    const[flag1,setFlag1]=useState(false);
-    const[insertMsg, setInsertMsg] = useState("")
-
-    const dispatch = useDispatch()
-    const mystate = useSelector((state) => state.logged)
-    let navigate = useNavigate();
-
-    useEffect(()=>{
-        setMsg(localStorage.getItem("msg"))
-    },[]);
-
-
-    const handleClick = (e) => {
-        e.preventDefault();
-        const reqOptions={
-            method:"POST",
-            headers:{'content-type':'application/json'},
-            body: JSON.stringify({
-            user_name:user.user_name.value,
-            password:user.password.value,
-        })
-    }
-    fetch("http://localhost:8080/login", reqOptions)
-    .then(resp => resp.json())
-    .then(data => {
-        // Handle the response from the server
-        console.log(data.role_id);
-        if (data!==null) {
-          // Redirect or perform other actions for successful login
-          alert('Login successful');
-
-            //to direct to individual home page
-            dispatch(login());
-            if( data.role_id == 1)
-            {
-                console.log(data.role_id);
-                navigate("/admin_home")
-            }
-            else if(data.role_id==2)
-            {
-                console.log(data.role_id);
-                navigate("/driver_home")
-            }
-            else if(data.role_id==3)
-            {
-                console.log(data.role_id);
-                navigate("/passenger_home")
-            }
-          
-         } 
-        else {
-            // Handle unsuccessful login
-            //   throw new Error("error");
-            alert('Incorrect password');
-            dispatch1({ type: "update", data: { key: 'password', value: '', touched: true, valid: false, error: "Incorrect password", formValid: false } });
-        
+  //dispatch to modify info object
+  const [info, dispatch] = useReducer(reducer, init);
+  const [msg, setMsg] = useState("");
+  const sendData = (e) => {
+    e.preventDefault();
+    const reqOptions = {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(info),
+    };
+    fetch("http://localhost:8080/verifyLogin", reqOptions)
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.text();
+        } else {
+          throw new Error("Service Error");
         }
       })
-      .catch(error => {
-        // Handle fetch errors here
-        console.error('Fetch error:', error);
-        // Optionally, you can display a generic error message to the user
-        alert('Incorrect Password');
-    });
-    }
-
-    const validateData = (key,val) => {
-        let valid = true;
-        let error = ""
-        switch(key)
-        {
-            case 'user_name':
-            //    var pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
-               var pattern = /^[A-Za-z]+@\d+$/;
-               if(!pattern.test(val))
-               {
-                  valid = false;
-                  error = "Please Enter Valid Username"
-               }
-
-               break;
-            case 'password': 
-                var pattern = /^[A-Za-z0-9@_]{8,15}$/ 
-                if(!pattern.test(val))
-                {
-                    valid = false;
-                    error = "Password should have 8-15 charaters"
-                }
-                break;
-        }
-        return { valid: valid, error: error}
-    }
-
-    
-    const handleChange = (key,value) => {
-        //1. call validateData function
-        const {valid, error} = validateData(key,value);
-
-        //2. check the validity status of the form
-        let formValid = true;
-        for(let k in user)
-        {
-            //console.log(user[k].valid)
-            if(user[k].valid === false && insertMsg=="false")
-            {
-                formValid = false;
-                break;
+      .then((text) => (text.length ? JSON.parse(text) : {}))
+      .then((obj) => {
+        if (Object.keys(obj).length === 0) {
+          setMsg("Account not found");
+        } else {
+          if (obj.id_approved === false) {
+            setMsg("Request not approved");
+          } else {
+            localStorage.setItem("loggedin",JSON.stringify(obj))
+            console.log(obj.role_id);
+            if (obj.role_id.role_id === 1) {
+              navigate("/admin_home");
+            } else if (obj.role_id.role_id === 2) {
+              navigate("/driver_home");
+            } else if (obj.role_id.role_id === 3) {
+              navigate("/passenger_home");
             }
+          }
         }
+      })
+      .catch((error) => {
+        navigate("/serverError");
+      });
+  };
 
-        //3. call to dispatch - updating the state
-        dispatch1({type: "update",data:{key,value,touched:true,valid,error,formValid}})
-    }
+  return (
 
-    return (
+    <div>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a className="navbar-brand" href="/">RideHub</a>
+    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span className="navbar-toggler-icon"></span>
+    </button>
+  
+    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul className="navbar-nav mr-auto">
+        <li className="nav-item">
+        <Link className="btn btn-outline-success" to="/about">
+                    AboutUs</Link> 
+        </li>
+      </ul>
+      </div>
+      <ul className="navbar-nav ms-auto">
+        <li className="nav-item">
+        <Link className="btn btn-outline-success" to="/">
+                    Home</Link> 
+        </li>
+      </ul>
+  </nav>
+    <div>
+      {/* <div className="form-Container">
+        <span id="login-label">Login</span> */}
         <div className="container d-flex justify-content-center ">
-        <div className="shadow-lg p-4 m-5" style={{"width": '50rem'}}>
-                <h1 className="d-flex justify-content-center text-success mb-3">Please Login!</h1>
-            <form>
-               Username :
-                <input type="email" name="uid" 
-                    value={user.user_name.value}
-                    onChange={(e)=>{handleChange("user_name",e.target.value)}} 
-                    onBlur={(e)=>{handleChange("user_name",e.target.value)}} className="form-control" placeholder="Enter your Username" required/>
-                <br/>
-                <div style={{ display: user.user_name.touched && !user.user_name.valid  ?"block":"none", color: "red"}}>
-                    { user.user_name.error}
-                </div>
-                <br/>
-                Password :
-                <input type="text" name="pwd" 
-                value={user.password.value}
-                onChange={(e)=>{handleChange("password",e.target.value)}} 
-                onBlur={(e)=>{handleChange("password",e.target.value)}} className="form-control" placeholder="Enter your password" required/>
-                <br/>
-                <div style={{ display: user.password.touched && !user.password.valid  ?"block":"none", color: "red"}}>
-                    { user.password.error}
-                </div>
-                <div className="row g-3 align-items-center d-flex justify-content-center mb-3">
-                        <div className="col-auto ">
-                <input type="button" value="Login"  className="btn btn-success w-100 font-weight-bold mt-2"
-                 disabled={!user.formValid}
-                onClick={handleClick}/>
-                </div>
-                        <div className="col-auto">
-                        <button type="button" className="btn btn-secondary w-100 font-weight-bold mt-2" >Cancel</button>
-                        </div>
-                    </div>
-                    <div className="text-center mb-3">
-                        <p>Not a member? <a href="/driverregister">Register</a></p>
-                    </div>
-            </form>
-            {/* <p> {JSON.stringify(user)} </p>
-            <p> Logged in : {mystate.loggedIn.toString()} </p> */}
+      <div className="shadow-lg p-4 m-5" style={{ width: "50rem" }}>
+        <h1 className="d-flex justify-content-center text-success mb-3">
+          Login
+        </h1>
+        <form method="POST">
+          <div className="form-group">
+            <label htmlFor="">User id</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              className="form-control"
+              value={info.username}
+              onChange={(e) => {
+                dispatch({
+                  type: "update",
+                  fld: "username",
+                  val: e.target.value,
+                });
+              }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              className="form-control"
+              value={info.password}
+              onChange={(e) => {
+                dispatch({
+                  type: "update",
+                  fld: "password",
+                  val: e.target.value,
+                });
+              }}
+            />
+          </div>
+
+          <div className="button-container">
+            <button
+              type=""
+              className="btn btn-primary w-100 font-weight-bold mt-2"
+              onClick={(e) => sendData(e)}
+            >
+              Submit
+            </button>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary w-100 font-weight-bold mt-2"
+          >
+            Cancel
+          </button>
+          <div className="error">{msg}</div>
+        </form>
+        <div className="text-center mb-3">
+          <div>
+            Not a Registered Driver?{" "} 
+            <Link to="/driver_register">
+              Register Driver
+            </Link>
+          </div>
+          <div>
+            Not a Registered Passenger?{" "}
+            <button onClick={() => navigate("/passenger_registration")}>
+              Register Passenger
+            </button>
+          </div>
         </div>
-        </div>
-    )
+      </div>
+      </div></div>
+      </div>
+    
+  );
 }
+
+export default LoginPage;

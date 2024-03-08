@@ -11,5 +11,4 @@ public class RentToRideSpringBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RentToRideSpringBootApplication.class, args);
 	}
-
 }

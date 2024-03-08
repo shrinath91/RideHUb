@@ -1,6 +1,6 @@
 import React from 'react';
-
-const AdminHome = () => {
+import { Link } from "react-router-dom";
+const AdminHome = ({ isLoggedIn, handleLogout }) => {
   return (
     <div>
       {/* Navigation Bar */}
@@ -24,6 +24,26 @@ const AdminHome = () => {
             </ul>
           </div>
         </div>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav ms-auto">
+              {isLoggedIn ? (
+                <li className="nav-item">
+                  <button
+                    className="btn btn-outline-text-success"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              ) : (
+                <li className="nav-item">
+                  <Link className="btn btn-outline-primary" to="/logout">
+                    Logout
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
       </nav>
     <div>
     <h1>Admin page</h1>

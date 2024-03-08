@@ -1,0 +1,6 @@
+@RideHub.Net_HostAddress = http://localhost:5199
+
+GET {{RideHub.Net_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
